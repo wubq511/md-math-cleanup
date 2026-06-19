@@ -1,7 +1,7 @@
 [
   {
     "name": "fix_chapter9_screenshot_symptom",
-    "prompt": "使用 md-math-cleanup 检查并修复 普通物理/output/Chapter9_磁场_复习前概览梳理.md，让 Obsidian 里末尾公式不要显示成灰底代码或红色 LaTeX 命令。",
+    "prompt": "使用 md-math-cleanup 检查并修复 普通物理/output/Chapter9_磁场_复习前概览梳理.md，让 Obsidian 里末尾公式不要显示成灰底代码、红色 LaTeX 命令，或 $ \\vec E $ 这种普通文本。",
     "expectations": [
       "Runs the bundled scanner before editing",
       "Converts math-like inline code spans to $...$ while preserving PDF/date source markers",
@@ -11,7 +11,7 @@
   },
   {
     "name": "fix_directory_of_physics_notes",
-    "prompt": "使用 md-math-cleanup 把 普通物理/output 里的 md 物理笔记都处理成 Obsidian 可读公式，重点处理反引号里的公式、\\(...\\)、\\[...\\]、\\oiint 和双反斜杠。",
+    "prompt": "使用 md-math-cleanup 把 普通物理/output 里的 md 物理笔记都处理成 Obsidian 可读公式，重点处理反引号里的公式、\\(...\\)、\\[...\\]、$ \\vec E $ 这种空格 inline math、\\oiint 和双反斜杠。",
     "expectations": [
       "Recurses the target directory for Markdown files",
       "Uses --write --aggressive-code-spans when the user asks to fix the whole note set",

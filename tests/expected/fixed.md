@@ -6,7 +6,8 @@
 
 1. 磁场结构：$∯ \boldsymbol{B}\cdot d\boldsymbol{S}=0$ 表示无源。
 2. 速度：$M=I\beta$，位移 $\Delta s$。
-3. 旧分隔符：$ \vec E=\vec F/q_0 $。
+3. 旧分隔符：$\vec E=\vec F/q_0$。
+4. 空格分隔符：$\vec E$ 和 $U$。
 
 $$
 \omega_e=\frac12\vec E\cdot\vec D

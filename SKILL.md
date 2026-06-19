@@ -13,6 +13,7 @@ The recurring failure modes are:
 
 - formula text wrapped in backticks, so Obsidian displays it as gray inline code
 - `\(...\)` / `\[...\]` delimiters not supported by the user's reader setup
+- inline math with spaces just inside dollar delimiters, such as `$ \vec E $`, which may render as literal text in Obsidian
 - unsupported or extension-dependent macros such as `\oiint`
 - accidental double escaping such as `\\mu`, `\\Delta`, `\\theta`
 - display math indented as a Markdown code block
@@ -44,6 +45,7 @@ The recurring failure modes are:
 | `` `M=Iβ` `` | `$M=I\beta$` |
 | `\(...\)` | `$...$` |
 | `\[...\]` | `$$...$$` |
+| `$ \vec E $` | `$\vec E$` |
 | `\oiint` | `∯` |
 | `\oiiint` | `∰` |
 | `\\Delta`, `\\mu` | `\Delta`, `\mu` |
@@ -56,6 +58,7 @@ The script preserves source-file markers such as `` `Chapter9 磁场 20260512.pd
 After automatic rewriting, inspect representative diffs or line samples:
 
 - formulas should be surrounded by `$` or `$$`, not backticks
+- inline formulas should not keep spaces immediately after the opening `$` or before the closing `$`
 - uncommon macros should be replaced with Obsidian-stable equivalents
 - physics meaning must remain intact; for example closed surface integrals should keep the closed-integral meaning via `∯`, not silently degrade to ordinary `\iint`
 - source references and non-formula code should stay as code

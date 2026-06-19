@@ -194,6 +194,53 @@ function convertInlineCode(line, options) {
   });
 }
 
+function isUnescapedInlineDollar(line, index) {
+  return (
+    line[index] === "$" &&
+    line[index - 1] !== "\\" &&
+    line[index - 1] !== "$" &&
+    line[index + 1] !== "$"
+  );
+}
+
+function normalizeSpacedInlineMath(line) {
+  let out = "";
+  let i = 0;
+  let inInlineCode = false;
+
+  while (i < line.length) {
+    if (line[i] === "`") {
+      inInlineCode = !inInlineCode;
+      out += line[i];
+      i++;
+      continue;
+    }
+
+    if (!inInlineCode && isUnescapedInlineDollar(line, i)) {
+      let end = -1;
+      for (let j = i + 1; j < line.length; j++) {
+        if (isUnescapedInlineDollar(line, j)) {
+          end = j;
+          break;
+        }
+      }
+
+      if (end >= 0) {
+        const formula = line.slice(i + 1, end);
+        const trimmed = formula.trim();
+        out += trimmed ? `$${trimmed}$` : `$${formula}$`;
+        i = end + 1;
+        continue;
+      }
+    }
+
+    out += line[i];
+    i++;
+  }
+
+  return out;
+}
+
 function normalizeIndentedDisplayMath(lines) {
   const result = [...lines];
   for (let i = 0; i < result.length; i++) {
@@ -233,6 +280,7 @@ function processMarkdown(text, options) {
     next = convertLegacyDelimiters(next);
     next = replaceUnsupportedMacros(next);
     next = normalizeDoubleBackslashCommands(next);
+    next = normalizeSpacedInlineMath(next);
     return next;
   });
 
@@ -342,7 +390,12 @@ function inspectMarkdown(text) {
       continue;
     }
     mathExpressions++;
-    const formula = item.formula.trim();
+    const rawFormula = item.formula;
+    if (!item.display && rawFormula !== rawFormula.trim()) {
+      issues.push({ line: item.line, type: "spaced-inline-math", text: `$${rawFormula}$` });
+    }
+
+    const formula = rawFormula.trim();
     if (!formula) {
       issues.push({ line: item.line, type: "empty-math", text: item.delimiter });
       continue;
@@ -437,5 +490,6 @@ module.exports = {
   collectMarkdownFiles,
   inspectMarkdown,
   normalizeFormula,
+  normalizeSpacedInlineMath,
   processMarkdown,
 };

@@ -12,6 +12,7 @@
 | `` `M=Iβ` `` 这类反引号里的公式 | 转成 `$M=I\beta$` |
 | `\(...\)` | 转成 `$...$` |
 | `\[...\]` | 转成 `$$...$$` |
+| `$ \vec E $` 这类 `$` 内侧带空格的 inline math | 转成 `$\vec E$` |
 | `\oiint` | 转成 Obsidian 更稳定的 `∯` |
 | `\oiiint` | 转成 `∰` |
 | `\\Delta`、`\\mu` 等双反斜杠 | 归一化成 `\Delta`、`\mu` |
@@ -64,6 +65,7 @@ node ~/.codex/skills/md-math-cleanup/scripts/md_math_cleanup.js --write --aggres
 2. 如果目标是物理/数学笔记，运行 `--write --aggressive-code-spans --json`。
 3. 再运行一次 `--check --json`，确保 `issues` 为 `[]`。
 4. 打开 Obsidian 抽查公式密集区域，重点看截图里常见的灰底代码、红色宏、display math 缩进问题。
+5. 如果 Obsidian 把 `$ \vec E $` 直接显示成普通文本，说明 inline math 的 `$` 内侧空格还没清理干净，重新跑 `--write`。
 
 ## 验证
 

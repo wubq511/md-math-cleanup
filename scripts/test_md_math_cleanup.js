@@ -11,17 +11,29 @@ const cleaner = path.join(__dirname, "md_math_cleanup.js");
 const fixture = path.join(skillDir, "tests", "fixtures", "broken.md");
 const expected = path.join(skillDir, "tests", "expected", "fixed.md");
 
-function run(args) {
-  return childProcess.execFileSync(process.execPath, [cleaner, ...args], {
-    encoding: "utf8",
-    stdio: ["ignore", "pipe", "pipe"],
-  });
+function run(args, options = {}) {
+  try {
+    return childProcess.execFileSync(process.execPath, [cleaner, ...args], {
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "pipe"],
+    });
+  } catch (error) {
+    if (options.allowFailure && error.stdout) {
+      return error.stdout;
+    }
+    throw error;
+  }
 }
 
 function main() {
   const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "md-math-cleanup-test-"));
   const target = path.join(tmpDir, "sample.md");
   fs.copyFileSync(fixture, target);
+
+  const initialReport = JSON.parse(run(["--check", "--json", target], { allowFailure: true }));
+  if (!initialReport.issues.some((issue) => issue.type === "spaced-inline-math")) {
+    throw new Error("expected fixture to report spaced-inline-math before cleanup");
+  }
 
   const writeReport = JSON.parse(run(["--write", "--aggressive-code-spans", "--json", target]));
   if (writeReport.issues.length !== 0) {
@@ -41,8 +53,8 @@ function main() {
   if (checkReport.issues.length !== 0) {
     throw new Error(`check found ${checkReport.issues.length} issue(s) after cleanup`);
   }
-  if (checkReport.mathExpressions !== 6) {
-    throw new Error(`expected mathExpressions=6, got ${checkReport.mathExpressions}`);
+  if (checkReport.mathExpressions !== 8) {
+    throw new Error(`expected mathExpressions=8, got ${checkReport.mathExpressions}`);
   }
 
   console.log("md-math-cleanup tests passed");
