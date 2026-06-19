@@ -1,0 +1,32 @@
+[
+  {
+    "name": "fix_chapter9_screenshot_symptom",
+    "prompt": "使用 md-math-cleanup 检查并修复 普通物理/output/Chapter9_磁场_复习前概览梳理.md，让 Obsidian 里末尾公式不要显示成灰底代码或红色 LaTeX 命令。",
+    "expectations": [
+      "Runs the bundled scanner before editing",
+      "Converts math-like inline code spans to $...$ while preserving PDF/date source markers",
+      "Replaces unsupported \\oiint with an Obsidian-stable closed surface integral representation",
+      "Runs the scanner again and reports remaining issue count"
+    ]
+  },
+  {
+    "name": "fix_directory_of_physics_notes",
+    "prompt": "使用 md-math-cleanup 把 普通物理/output 里的 md 物理笔记都处理成 Obsidian 可读公式，重点处理反引号里的公式、\\(...\\)、\\[...\\]、\\oiint 和双反斜杠。",
+    "expectations": [
+      "Recurses the target directory for Markdown files",
+      "Uses --write --aggressive-code-spans when the user asks to fix the whole note set",
+      "Reports changed file count and issue categories",
+      "Does not rewrite source-file references such as PDF names or date markers"
+    ]
+  },
+  {
+    "name": "check_only_report",
+    "prompt": "只检查不改：告诉我这些 md 里还有哪些公式会在 Obsidian 中显示异常。",
+    "expectations": [
+      "Uses --check --json only",
+      "Does not modify files",
+      "Leads with remaining file and line issues",
+      "Explains Obsidian-specific symptom categories in Chinese"
+    ]
+  }
+]
